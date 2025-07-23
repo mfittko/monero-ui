@@ -86,13 +86,14 @@
 - [x] Configure npm test scripts (test, test:watch, test:coverage)
 - [x] Create test setup and utilities with proper mocking
 
-### Task 3.2: CLI Command Testing ✅ IN PROGRESS (1.5 hours estimated, 0.5 completed)
+### Task 3.2: CLI Command Testing ✅ COMPLETED (1.5 hours estimated, 1.0 completed)
 - [x] Test CLI entry point and basic functionality
-- [x] Test daemon management commands (start/stop/restart/status) with proper mocking
+- [x] Test daemon management commands (start/stop/restart/status) with proper mocking  
 - [x] Test autostart commands (enable/disable/status) with system call mocking
-- [ ] Test configuration management commands
-- [ ] Test install/uninstall commands
-- [ ] Test error handling and edge cases with comprehensive scenarios
+- [x] Test configuration management commands (show/edit/reset)
+- [x] Test logs commands (view/clear/follow) with file system mocking
+- [x] Test install/uninstall commands with comprehensive option handling
+- [x] Test error handling and edge cases with comprehensive scenarios
 
 ### Task 3.3: Platform-Specific Testing (1 hour)
 - [ ] Test macOS-specific functionality (launchd)
