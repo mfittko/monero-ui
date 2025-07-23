@@ -37,6 +37,114 @@ function installMacOS() {
 <plist version="1.0">
 <dict>
     <key>CFBundleExecutable</key>
+    <string>xmrig-ui-launcher</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.xmrig.webui</string>
+    <key>CFBundleName</key>
+    <string>${projectName}</string>
+    <key>CFBundleVersion</key>
+    <string>1.0.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.14</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+</dict>
+</plist>`;
+
+  fs.writeFileSync(path.join(contentsDir, 'Info.plist'), infoPlist);
+
+  // Create launcher script
+  const launcherScript = `#!/bin/bash
+cd "${projectDir}"
+# Use the CLI to start the application
+"${path.join(projectDir, 'bin/xmrig-ui')}" start --daemon
+sleep 2
+open "http://localhost:4173"
+`;
+
+  const launcherPath = path.join(macOSDir, 'xmrig-ui-launcher');
+  fs.writeFileSync(launcherPath, launcherScript);
+  fs.chmodSync(launcherPath, '755');
+
+  console.log(`✅ macOS app bundle created: ${appDir}`);
+  console.log('🍎 The app will appear in your Applications folder');
+}
+
+function installLinux() {
+  const desktopDir = path.join(os.homedir(), '.local', 'share', 'applications');
+  fs.mkdirSync(desktopDir, { recursive: true });
+
+  const desktopEntry = `[Desktop Entry]
+Version=1.0
+Type=Application
+Name=${projectName}
+Comment=XMRig Web UI monitoring dashboard
+Exec=${path.join(projectDir, 'bin/xmrig-ui')} start --daemon && sleep 2 && xdg-open "http://localhost:4173"
+Icon=utilities-system-monitor
+Terminal=false
+Categories=System;Monitor;
+`;
+
+  const desktopFile = path.join(desktopDir, 'xmrig-web-ui.desktop');
+  fs.writeFileSync(desktopFile, desktopEntry);
+  fs.chmodSync(desktopFile, '755');
+
+  try {
+    execSync('update-desktop-database ~/.local/share/applications/', { stdio: 'ignore' });
+  } catch (error) {
+    // Desktop database update failed, but desktop entry should still work
+  }
+
+  console.log(`✅ Linux desktop entry created: ${desktopFile}`);
+  console.log('🐧 The app will appear in your applications menu');
+}
+
+async function installApp(globalOpts = {}) {
+  const platform = detectPlatform();
+  
+  console.log(`🚀 Installing ${projectName} for ${platform}...`);
+  
+  try {
+    switch (platform) {
+      case 'macos':
+        installMacOS();
+        break;
+      case 'linux':
+        installLinux();
+        break;
+    }
+    
+    console.log(`\n✅ Installation completed successfully!`);
+    console.log('💡 You can now launch the app from your applications menu or folder');
+  } catch (error) {
+    console.error(`❌ Installation failed: ${error.message}`);
+    if (globalOpts.verbose) {
+      console.error(error.stack);
+    }
+    process.exit(1);
+  }
+}
+
+// Export for CLI usage
+module.exports = { installApp };
+
+// If called directly, run the install
+if (require.main === module) {
+  installApp();
+}
+  fs.mkdirSync(macOSDir, { recursive: true });
+  fs.mkdirSync(resourcesDir, { recursive: true });
+
+  // Create Info.plist
+  const infoPlist = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key>
     <string>${executableName}</string>
     <key>CFBundleIdentifier</key>
     <string>com.xmrig.webui</string>

@@ -18,6 +18,102 @@ A modern React-based web dashboard for monitoring XMRig mining statistics with r
 
 ## Usage
 
+### Command Line Interface (CLI)
+
+XMRig Web UI provides a comprehensive CLI for managing the application:
+
+```bash
+# Install the CLI globally (recommended)
+npm install -g .
+
+# Or use directly from project directory
+./bin/xmrig-ui [command]
+```
+
+#### Basic Commands
+
+```bash
+# Start the application
+xmrig-ui start
+
+# Start as background daemon
+xmrig-ui start --daemon
+
+# Stop the daemon
+xmrig-ui stop
+
+# Check status
+xmrig-ui status
+
+# Restart the service
+xmrig-ui restart
+```
+
+#### Autostart Management
+
+```bash
+# Enable autostart on system boot
+xmrig-ui autostart enable
+
+# Disable autostart
+xmrig-ui autostart disable
+
+# Check autostart status
+xmrig-ui autostart status
+
+# Enable with custom settings
+xmrig-ui autostart enable --port 8080 --delay 15
+```
+
+#### Configuration Management
+
+```bash
+# Show current configuration
+xmrig-ui config show
+
+# Interactive configuration editor
+xmrig-ui config edit
+
+# Reset to defaults
+xmrig-ui config reset
+```
+
+#### Application Management
+
+```bash
+# Install desktop shortcuts/app bundles
+xmrig-ui install
+
+# View logs
+xmrig-ui logs
+
+# Follow logs in real-time
+xmrig-ui logs --follow
+
+# Clear logs
+xmrig-ui logs --clear
+
+# Uninstall completely
+xmrig-ui uninstall
+```
+
+#### Global Options
+
+```bash
+# JSON output (machine-readable)
+xmrig-ui status --json
+
+# Quiet mode (minimal output)
+xmrig-ui start --quiet
+
+# Verbose mode (detailed output)
+xmrig-ui start --verbose
+
+# Help for any command
+xmrig-ui --help
+xmrig-ui autostart --help
+```
+
 ### Development Mode
 1. Make sure XMRig is running with HTTP API enabled on port 8080
 2. Start the development server:
@@ -33,8 +129,7 @@ A modern React-based web dashboard for monitoring XMRig mining statistics with r
    ```
 2. Serve the built files from the `dist` directory with any web server
 
-### Production Daemon Mode (Recommended)
-Run the application as a background daemon with singleton process management:
+### Legacy NPM Scripts (Backward Compatibility)
 
 ```bash
 # Start the daemon (builds and serves on port 4173)
@@ -111,6 +206,102 @@ This creates:
 - **No Data**: Check XMRig API connection on port 8080
 - **Connection Error**: Verify XMRig HTTP API is enabled
 - **Performance Issues**: Check individual thread performance in Threads tab
+
+## Autostart Configuration
+
+XMRig Web UI supports automatic startup on system boot for seamless monitoring:
+
+### Supported Platforms
+
+- **Linux**: systemd user services (Ubuntu, CentOS, Fedora, etc.)
+- **macOS**: launchd agents (macOS 10.14+)
+- **Windows**: Not yet implemented (use Task Scheduler manually)
+
+### Quick Setup
+
+1. **Enable autostart**:
+   ```bash
+   xmrig-ui autostart enable
+   ```
+
+2. **Configure startup delay** (optional):
+   ```bash
+   xmrig-ui autostart enable --delay 30  # Wait 30 seconds after boot
+   ```
+
+3. **Verify configuration**:
+   ```bash
+   xmrig-ui autostart status
+   ```
+
+### Advanced Configuration
+
+The autostart feature creates platform-specific service files:
+
+- **Linux**: `~/.config/systemd/user/xmrig-web-ui.service`
+- **macOS**: `~/Library/LaunchAgents/xmrig-web-ui.plist`
+
+These services are configured to:
+- Start automatically after user login
+- Restart on failure
+- Log to system journals
+- Run with appropriate permissions
+
+### Manual Service Management
+
+For advanced users who prefer manual control:
+
+```bash
+# Linux (systemd)
+systemctl --user enable xmrig-web-ui.service
+systemctl --user start xmrig-web-ui.service
+systemctl --user status xmrig-web-ui.service
+
+# macOS (launchd)
+launchctl load ~/Library/LaunchAgents/xmrig-web-ui.plist
+launchctl start com.xmrig.webui
+launchctl list | grep xmrig
+```
+
+## Configuration Management
+
+### Configuration File
+
+XMRig Web UI stores configuration in `~/.xmrig-ui/config.json`:
+
+```json
+{
+  "server": {
+    "port": 4173,
+    "host": "0.0.0.0"
+  },
+  "xmrig": {
+    "apiUrl": "http://localhost:8080",
+    "refreshInterval": 5000
+  },
+  "ui": {
+    "theme": "dark",
+    "autoRefresh": true,
+    "showSystemInfo": true
+  },
+  "logging": {
+    "level": "info",
+    "file": "/tmp/xmrig-web-ui.log",
+    "maxSize": "10MB",
+    "rotate": true
+  }
+}
+```
+
+### Environment Variables
+
+Override configuration with environment variables:
+
+```bash
+export XMRIG_UI_PORT=8080
+export XMRIG_UI_API_URL=http://192.168.1.100:8080
+xmrig-ui start
+```
 
 ## Features
 
