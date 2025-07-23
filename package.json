@@ -3,10 +3,18 @@
   "version": "1.0.0",
   "description": "A React-based web UI for XMRig miner monitoring",
   "main": "index.js",
+  "engines": {
+    "node": ">=20.19.4",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview --port 4173 --host",
+    "install-app": "node scripts/install-app.js",
+    "start-daemon": "node scripts/start-daemon.js",
+    "stop-daemon": "node scripts/stop-daemon.js",
+    "status-daemon": "node scripts/status-daemon.js"
   },
   "dependencies": {
     "react": "^18.2.0",
