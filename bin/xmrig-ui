@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+const path = require('path');
+const { CLI } = require('../lib/cli');
+
+// Create and run CLI instance
+const cli = new CLI();
+cli.run(process.argv);
