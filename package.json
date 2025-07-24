@@ -16,11 +16,7 @@
     "preview": "vite preview --port 4173 --host",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "install-app": "xmrig-ui install",
-    "start-daemon": "xmrig-ui start --daemon",
-    "stop-daemon": "xmrig-ui stop",
-    "status-daemon": "xmrig-ui status"
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "boxen": "^5.1.2",

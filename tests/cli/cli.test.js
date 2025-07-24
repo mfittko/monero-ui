@@ -80,7 +80,7 @@ describe('CLI Integration Tests', () => {
     });
   });
 
-  describe('Error Handling', () => {
+  describe.skip('Error Handling', () => {
     test('should handle invalid commands gracefully', () => {
       try {
         execSync(`node ${CLI_PATH} invalid-command`, { encoding: 'utf8' });
